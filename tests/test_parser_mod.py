@@ -20,19 +20,49 @@ def test_is_reading_model():
     assert new_parser.model_content == expected_content
 
 
-def test_should_have_right_number_of_estructures_parsing_var():
+def test_should_have_right_number_of_estructures_parsing_only_vars():
     new_parser: AMPLParser = init_parser("only_var")
     assert len(new_parser.model_parsed.children) == 1
     assert len(new_parser.model_parsed.children[0].children) == 2
 
 
-def test_should_have_right_number_of_estructures_parsing_objectives():
-    new_parser: AMPLParser = init_parser("only_objective")
-    assert len(new_parser.model_parsed.children) == 1
-    assert len(new_parser.model_parsed.children[0].children) == 4
-
-
-def test_should_have_right_number_of_estructures_parsing_constraints():
-    new_parser: AMPLParser = init_parser("only_constraints")
+def test_should_have_right_number_of_estructures_parsing_only_vars_with_constraints():
+    new_parser: AMPLParser = init_parser("only_var_with_constraints")
     assert len(new_parser.model_parsed.children) == 1
     assert len(new_parser.model_parsed.children[0].children) == 2
+
+def test_should_have_right_number_of_estructures_parsing_only_objectives():
+    new_parser: AMPLParser = init_parser("only_objective")
+    assert len(new_parser.model_parsed.children) == 1
+    assert len(new_parser.model_parsed.children[0].children[0].children) == 3
+    assert new_parser.model_parsed.children[0].children[1].text == "end;\n"
+
+
+def test_should_have_right_number_of_estructures_parsing_only_constraints():
+    new_parser: AMPLParser = init_parser("only_constraints")
+    assert len(new_parser.model_parsed.children) == 1
+    assert len(new_parser.model_parsed.children[0].children[0].children) == 2
+    assert new_parser.model_parsed.children[0].children[1].text == "end;\n"
+
+
+def test_should_have_right_number_of_estructures_parsing_vars_and_constraints():
+    new_parser: AMPLParser = init_parser("vars_and_constraints")
+    assert len(new_parser.model_parsed.children) == 1
+    assert len(new_parser.model_parsed.children[0].children[0].children) == 2
+    assert new_parser.model_parsed.children[0].children[1].text == "end;\n"
+
+
+# Problems
+
+def test_should_have_right_number_of_estructures_parsing_refinaria():
+    new_parser: AMPLParser = init_parser("refinaria")
+    assert len(new_parser.model_parsed.children) == 1
+    assert len(new_parser.model_parsed.children[0].children[0].children) == 6
+    assert new_parser.model_parsed.children[0].children[1].text == "end;\n"
+
+
+def test_should_have_right_number_of_estructures_parsing_centre_county():
+    new_parser: AMPLParser = init_parser("centre_county")
+    assert len(new_parser.model_parsed.children) == 1
+    assert len(new_parser.model_parsed.children[0].children[0].children) == 8
+    assert new_parser.model_parsed.children[0].children[1].text == "end;\n"
