@@ -13,10 +13,10 @@ class AMPLParser(object):
             expr        = (entry / emptyline)
             entry       = (variable / objective / constraint / end / ws)*
 
-            variable    = "var" ws word ws endline ws
-            objective   = objective_keyword ws word ws ":" ws equation endline ws
-            constraint  = "subject" ws "to" ws word ws ":" ws equation ws operator ws equation endline ws
-            end         = "end" ws endline ws
+            variable    = "var" ws word ws endline
+            objective   = ("minimize" / "maximize") ws word ws ":" ws equation endline
+            constraint  = "subject" ws "to" ws word ws ":" ws equation ws (">=" / "<=") ws equation endline
+            end         = "end" ws endline
 
             equation    = sum
             sum         = product (("+" / "-") product)*
@@ -27,13 +27,10 @@ class AMPLParser(object):
             word        = ~r"[-\w]+"
             number      = ~r"[\d]+" ("." ~r"[\d]+")?
 
-            operator   = ">=" / "<="
-            endline     = ";"
+            endline     = ";" ws
 
             ws          = ~r"\s*"
             emptyline   = ws+
-
-            objective_keyword     = "minimize" / "maximize"
         """)
 
     def parse(self, model_filename: str):
